@@ -1,30 +1,41 @@
-# Week 2: ClassicModels REST API
+# ClassicModels Enterprise REST API
 
-This project is a high-performance REST API built with FastAPI and PostgreSQL, featuring a 4-layer clean architecture and concurrent processing.
+A high-performance, scalable backend system built with **FastAPI** and **PostgreSQL**. This project demonstrates enterprise-level software engineering practices, including a 4-layer clean architecture, containerization, and asynchronous concurrency.
 
-## 🚀 Setup Instructions
-1. Clone the repo: `git clone <your-url>`
-2. Create a `.env` file (refer to the `.env.example` provided).
-3. Start the database: `docker-compose up -d`
-4. Install dependencies: `pip install -r requirements.txt`
-5. Run the API: `uvicorn app.main:app --reload`
+## 🚀 Overview
+This API provides full CRUD (Create, Read, Update, Delete) capabilities for the classic `ClassicModels` relational database, which includes 8 interconnected tables (Customers, Orders, Products, Employees, etc.). 
+
+The project is built following the **Twelve-Factor App** methodology to ensure portability, security, and performance.
 
 ## 🛠 Tech Stack
-- **FastAPI**: Web Framework
-- **SQLAlchemy**: ORM for database interaction
-- **PostgreSQL**: Database
-- **Docker**: Containerization
-- **Pydantic**: Data validation
+*   **Framework:** FastAPI (Python)
+*   **Database:** PostgreSQL
+*   **ORM:** SQLAlchemy
+*   **Validation:** Pydantic
+*   **Environment:** Docker & Docker Compose
+*   **Concurrency:** Asyncio
 
-## 📝 Reflections (Twelve-Factor App)
-### Factor III: Config
-Hardcoding passwords or API keys is a major security risk because once code is committed to version control (like Git), those secrets are visible to anyone with access and are nearly impossible to erase from history.
-•Using .env files keeps sensitive data out of your repository.
-•Additionally, it allows you to change settings for different environments (like moving from a local test database to a production one) without ever touching the actual source code.
+## 🏗 Architecture
+The project follows a **4-Layer Clean Architecture** to ensure separation of concerns and maintainability:
+1.  **Database Layer (`database.py` & `models.py`):** Manages the engine connection and SQLAlchemy ORM models.
+2.  **Schema Layer (`/schemas`):** Uses Pydantic models for strict data validation and request/response serialization.
+3.  **Logic Layer (`/crud`):** Contains reusable business logic and database queries.
+4.  **API Layer (`/routers`):** Handles HTTP requests, routing, and response status codes.
 
-### Factor VIII: Concurrency
-In this task, I implemented Factor VIII by moving from sequential processing to concurrent processing using asyncio. Sequential processing acts like a single cashier; it forces each database query to wait for the previous one to finish, creating a bottleneck. By using asyncio.gather, I treatedthe API like a bank with multiple cashiers, allowing the system to handle all 8 table counts simultaneously. This significantly reduces the total response time for the dashboard.
-Furthermore, by combining this with Factor II (Dependencies) and Factor IV (Backing Services), the application remains scalable. If the database grows or we switch from PostgreSQL to another service, our modular CRUD functions and concurrent architecture ensure that the API remains high-performing without needing a total rewrite. This setup demonstrates how modern cloud-native applications handle high loads by efficiently utilizing system resources rather than staying idle while waiting for external database responses.
+## ⚡ Key Features
+*   **Automated Initialization:** Database and tables are automatically created and seeded upon Docker startup using `seed.sql`.
+*   **High-Performance Aggregation:** An `/overall_counts` endpoint leverages **Factor VIII (Concurrency)** via `asyncio.gather()` to query 8 tables simultaneously, minimizing latency.
+*   **Strict Validation:** Pydantic validators ensure data integrity (e.g., validating email formats and ensuring `requiredDate` is after `orderDate`).
+*   **Comprehensive Logging:** Centralized logging tracks every request, database operation, and performance metric.
 
-### Factor X: Dev/Prod Parity
-Docker creates a consistent "container" that includes the exact same operating system, libraries, and dependencies regardless of where it runs. By using the same Docker image in development and production, you eliminate the "it works on my machine" syndrome.It ensures that if the code passes tests on a developer's laptop, it will behave identically in the production environment.
+## 🚦 Getting Started
+
+### Prerequisites
+*   Docker & Docker Compose
+*   Python 3.10+ (for local testing)
+
+### Installation & Setup
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/shukrina/classic-models-api.git
+   cd classic-models-api
