@@ -35,7 +35,49 @@ The project follows a **4-Layer Clean Architecture** to ensure separation of con
 *   Python 3.10+ (for local testing)
 
 ### Installation & Setup
-1. **Clone the repository:**
+### 1. Clone the repository
+```bash
+git clone https://github.com/shukrina/classic-models-api.git
+cd classic-models-api
+```
+
+### 2. Configure Environment Variables (Factor III)
+The project requires environment variables to connect to the database. 
+1. Copy the template file:
    ```bash
-   git clone https://github.com/shukrina/classic-models-api.git
-   cd classic-models-api
+   cp .env.example .env
+   ```
+2. Open the new `.env` file and ensure the values match your local/docker environment.
+
+### 3. Setup Virtual Environment
+```bash
+# Create a virtual environment
+python -m venv .venv
+
+# Activate it (Linux/macOS)
+source .venv/bin/activate
+
+# Activate it (Windows)
+# .venv\Scripts\activate
+```
+
+### 4. Install Dependencies (Factor II)
+```bash
+pip install --upgrade pip
+pip install -r requirements.txt
+```
+
+### 5. Start the Database (Docker)
+Ensure Docker is running, then start the PostgreSQL container:
+```bash
+docker-compose up -d
+```
+*The database will automatically initialize and seed data using `seed.sql` on the first run.*
+
+### 6. Run the FastAPI Server
+```bash
+uvicorn app.main:app --reload
+```
+The API will be available at: `http://127.0.0.1:8000`
+Swagger Documentation: `http://127.0.0.1:8000/docs`
+```
